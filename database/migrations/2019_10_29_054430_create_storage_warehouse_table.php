@@ -15,11 +15,8 @@ class CreateStorageWarehouseTable extends Migration
     {
         Schema::create('storage_warehouse', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('storage_id')->unsigned();
             $table->bigInteger('warehouse_id')->unsigned();
-
-            $table->foreign('storage_id')->references('id')->on('storages');
-            $table->foreign('warehouse_id')->references('id')->on('warehouses');
+            $table->bigInteger('storage_id')->unsigned();
             $table->timestamps();
         });
     }

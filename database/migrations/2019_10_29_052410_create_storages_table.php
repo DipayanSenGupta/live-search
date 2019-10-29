@@ -15,7 +15,7 @@ class CreateStoragesTable extends Migration
     {
         Schema::create('storages', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('storage_type');
+            $table->string('storage');
             $table->timestamps();
         });
     }

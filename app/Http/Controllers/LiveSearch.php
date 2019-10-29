@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use App\Storage;
 
 class LiveSearch extends Controller
 {
@@ -18,42 +19,60 @@ class LiveSearch extends Controller
      {
       $output = '';
       $query = $request->get('query');
+      $warehouse = [];
+      $warehousesFetched = [];
       if($query != '')
       {
-       $data = DB::table('warehouses')
+       
+        $data = DB::table('warehouses')
          ->where('name', 'like', '%'.$query.'%')
          ->orWhere('solution_type', 'like', '%'.$query.'%')
          ->orWhere('facilities', 'like', '%'.$query.'%')
          ->orWhere('available_space', 'like', '%'.$query.'%')
          ->orWhere('address', 'like', '%'.$query.'%')
          ->get();
-        $data1 = DB::table('storage_types')
-        ->where('storage_type', 'like', '%'.$query.'%')
-        ->get();
-        foreach($data1 as $obj){
 
+        $data1 = DB::table('storages')
+        ->select('id')
+        ->where('storage', 'like', '%'.$query.'%')
+        ->get();
+
+        $data1 = json_decode($data1, true);
+        
+        foreach($data1 as $item){
+          $id = $item['id'];
+          $storage = Storage::find($id);
+          $warehouses = $storage->warehouses();
+          $warehouses = (array)$warehouses;
+          // $warehouses= json_decode($warehouses, true);
+
+          $warehouse = array_merge($warehousesFetched,$warehouses);
         }
-        echo json_encode($data1);
+
+        $data = json_decode($data, true);
+        $data = array_merge($warehousesFetched,$data);
+        // echo json_encode($data);
+
       }
       else
       {
-       $data = DB::table('live_searches')
+       $data = DB::table('warehouses')
         //  ->orderBy('CustomerID', 'desc')
          ->get();
-
       }
-      $total_row = $data->count();
+      $total_row = count($data);
+      echo json_encode($data) ;
       if($total_row > 0)
       {
        foreach($data as $row)
        {
         $output .= '
         <tr>
-         <td>'.$row->name.'</td>
-         <td>'.$row->solution_type.'</td>
-         <td>'.$row->facilities.'</td>
-         <td>'.$row->available_space.'</td>
-         <td>'.$row->address.'</td>
+         <td>'.$row['name'].'</td>
+         <td>'.$row['solution_type'].'</td>
+         <td>'.$row['facilities'].'</td>
+         <td>'.$row['available_space'].'</td>
+         <td>'.$row['address'].'</td>
         </tr>
         ';
        }

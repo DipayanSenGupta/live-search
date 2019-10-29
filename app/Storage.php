@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Storage extends Model
 {
-    protected $table = 'storage_types';
+    protected $fillable = [
+        'storage'
+    ];
     public function warehouses()
     {
-        return $this->belongsToMany(Warehouse::class, 'storage_warehouse');
+        return $this->belongsToMany(Warehouse::class,'storage_warehouse');
     }
 }
