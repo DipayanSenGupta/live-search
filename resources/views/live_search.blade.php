@@ -22,11 +22,11 @@
       <table class="table table-striped table-bordered">
        <thead>
         <tr>
-         <th>Customer Name</th>
+         <th> Name</th>
+         <th>Solution type</th>
+         <th>Facilities</th>
+         <th>Space</th>
          <th>Address</th>
-         <th>City</th>
-         <th>Postal Code</th>
-         <th>Country</th>
         </tr>
        </thead>
        <tbody>

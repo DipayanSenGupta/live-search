@@ -20,21 +20,27 @@ class LiveSearch extends Controller
       $query = $request->get('query');
       if($query != '')
       {
-       $data = DB::table('live_searches')
+       $data = DB::table('warehouses')
          ->where('name', 'like', '%'.$query.'%')
+         ->orWhere('solution_type', 'like', '%'.$query.'%')
+         ->orWhere('facilities', 'like', '%'.$query.'%')
+         ->orWhere('available_space', 'like', '%'.$query.'%')
          ->orWhere('address', 'like', '%'.$query.'%')
-         ->orWhere('city', 'like', '%'.$query.'%')
-         ->orWhere('code', 'like', '%'.$query.'%')
-         ->orWhere('country', 'like', '%'.$query.'%')
-        //  ->orderBy('CustomerID', 'desc')
          ->get();
-         
+        $data1 = DB::table('storage_types')
+        ->where('storage_type', 'like', '%'.$query.'%')
+        ->get();
+        foreach($data1 as $obj){
+
+        }
+        echo json_encode($data1);
       }
       else
       {
        $data = DB::table('live_searches')
         //  ->orderBy('CustomerID', 'desc')
          ->get();
+
       }
       $total_row = $data->count();
       if($total_row > 0)
@@ -44,10 +50,10 @@ class LiveSearch extends Controller
         $output .= '
         <tr>
          <td>'.$row->name.'</td>
+         <td>'.$row->solution_type.'</td>
+         <td>'.$row->facilities.'</td>
+         <td>'.$row->available_space.'</td>
          <td>'.$row->address.'</td>
-         <td>'.$row->city.'</td>
-         <td>'.$row->code.'</td>
-         <td>'.$row->country.'</td>
         </tr>
         ';
        }
